@@ -1,3 +1,7 @@
+import User from "../models/userModel.js";
+import { setAuthTokenCookie } from "../utils/tokenUtils.js";
+import bcrypt from "bcryptjs";
+
 export const login = async (req, res) => {
   res.json({
     message: "You hit the login endpoint",
@@ -11,7 +15,59 @@ export const logout = async (req, res) => {
 };
 
 export const signup = async (req, res) => {
-  res.json({
-    message: "You hit the signup endpoint",
-  });
+  try {
+    const { username, email, password } = req.body;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        error: "Invalid email",
+      });
+    }
+
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+      return res.status(400).json({
+        error: "Email already in use",
+      });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        error: "Password must be at least 6 characters",
+      });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+    });
+
+    if (newUser) {
+      await newUser.save();
+
+      setAuthTokenCookie(newUser, res);
+
+      return res.status(201).json({
+        _id: newUser._id,
+        username: newUser.username,
+        email: newUser.email,
+        profilePic: newUser.profilePic,
+        gameFollowing: newUser.gameFollowing,
+      });
+    } else {
+      return res.status(400).json({
+        error: "Failed to create user",
+      });
+    }
+  } catch (error) {
+    console.log("Error in signup controller: ", error.message);
+    return res.status(500).json({
+      error: "Internal server error",
+    });
+  }
 };
