@@ -3,9 +3,38 @@ import { setAuthTokenCookie } from "../utils/tokenUtils.js";
 import bcrypt from "bcryptjs";
 
 export const login = async (req, res) => {
-  res.json({
-    message: "You hit the login endpoint",
-  });
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password are required" });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
+
+    setAuthTokenCookie(user._id, res);
+
+    return res.status(200).json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      profilePic: user.profilePic,
+      gameFollowing: user.gameFollowing,
+    });
+  } catch (error) {
+    console.log("Error in login controller: ", error.message);
+    return res.status(500).json({
+      error: "Internal server error",
+    });
+  }
 };
 
 export const logout = async (req, res) => {
@@ -50,7 +79,7 @@ export const signup = async (req, res) => {
     if (newUser) {
       await newUser.save();
 
-      setAuthTokenCookie(newUser, res);
+      setAuthTokenCookie(newUser._id, res);
 
       return res.status(201).json({
         _id: newUser._id,
