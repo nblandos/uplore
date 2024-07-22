@@ -4,22 +4,30 @@ import bcrypt from "bcryptjs";
 
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { login, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ error: "Email and password are required" });
+    if (!login || !password) {
+      return res
+        .status(400)
+        .json({ error: "Email/Username and password are required" });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({
+      $or: [{ email: login }, { username: login }],
+    });
+
     if (!user) {
-      return res.status(401).json({ error: "Invalid email or password" });
+      return res
+        .status(401)
+        .json({ error: "Invalid email/username or password" });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ error: "Invalid email or password" });
+      return res
+        .status(401)
+        .json({ error: "Invalid email/username or password" });
     }
-
     setAuthTokenCookie(user._id, res);
 
     return res.status(200).json({
@@ -62,10 +70,13 @@ export const signup = async (req, res) => {
       });
     }
 
-    const existingEmail = await User.findOne({ email });
-    if (existingEmail) {
+    const existingUser = await User.findOne({
+      $or: [{ email }, { username }],
+    });
+
+    if (existingUser) {
       return res.status(400).json({
-        error: "Email already in use",
+        error: "Email or Username already in use",
       });
     }
 
