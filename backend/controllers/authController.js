@@ -35,7 +35,7 @@ export const login = async (req, res) => {
       username: user.username,
       email: user.email,
       profilePic: user.profilePic,
-      gameFollowing: user.gameFollowing,
+      gamesFollowed: user.gamesFollowed,
     });
   } catch (error) {
     console.log("Error in login controller: ", error.message);
@@ -105,7 +105,7 @@ export const signup = async (req, res) => {
         username: newUser.username,
         email: newUser.email,
         profilePic: newUser.profilePic,
-        gameFollowing: newUser.gameFollowing,
+        gamesFollowed: newUser.gamesFollowed,
       });
     } else {
       return res.status(400).json({
@@ -123,7 +123,10 @@ export const signup = async (req, res) => {
 export const getAuthenticatedUser = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("-password");
-    res.status(200).json(user);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    return res.status(200).json(user);
   } catch (error) {
     console.log("Error in getAuthenticatedUser controller: ", error.message);
     return res.status(500).json({

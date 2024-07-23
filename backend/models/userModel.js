@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    gameFollowing: [
+    gamesFollowed: [
       {
         gameId: String,
         followDate: { type: Date, default: Date.now },
