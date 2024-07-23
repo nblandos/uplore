@@ -35,7 +35,7 @@ export const login = async (req, res) => {
       username: user.username,
       email: user.email,
       profilePic: user.profilePic,
-      gamesFollowed: user.gamesFollowed,
+      followedGames: user.followedGames,
     });
   } catch (error) {
     console.log("Error in login controller: ", error.message);
@@ -105,7 +105,7 @@ export const signup = async (req, res) => {
         username: newUser.username,
         email: newUser.email,
         profilePic: newUser.profilePic,
-        gamesFollowed: newUser.gamesFollowed,
+        followedGames: newUser.followedGames,
       });
     } else {
       return res.status(400).json({

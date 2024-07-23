@@ -13,16 +13,14 @@ export const getUserProfile = async (req, res) => {
     return res.status(200).json(user);
   } catch (error) {
     console.log("Error in getUserProfile controller: ", error.message);
-    return res.status(500).json({
-      error: "Internal server error",
-    });
+    throw error;
   }
 };
 
 // export const getSuggestedGames = async (req, res) => {
 //   try {
 //     const userId = req.user._id;
-//     const gamesFollowed = await User.findById(userId).select("gamesFollowed");
+//     const followedGames = await User.findById(userId).select("followedGames");
 
 //     // method to suggest similar games based on games followed here
 
@@ -48,19 +46,19 @@ export const getUserProfile = async (req, res) => {
 //       return res.status(404).json({ error: "User not found" });
 //     }
 
-//     const isFollowing = user.gamesFollowed.includes(gameId);
+//     const isFollowing = user.followedGames.includes(gameId);
 
 //     if (isFollowing) {
-//       user.gamesFollowed = user.gamesFollowed.filter(
+//       user.followedGames = user.followedGames.filter(
 //         (game) => game.toString() !== gameId,
 //       );
 //     } else {
 //       // await Game.findByIdAndUpdate(gameId, { $inc: { followers: 1 } }); // Increment followers count of game
-//       user.gamesFollowed.push(gameId);
+//       user.followedGames.push(gameId);
 //     }
 
 //     await user.save();
-//     return res.status(200).json(user.gamesFollowed);
+//     return res.status(200).json(user.followedGames);
 //   } catch (error) {
 //     console.log("Error in followUnfollowGame controller: ", error.message);
 //     return res.status(500).json({

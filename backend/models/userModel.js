@@ -6,11 +6,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      trim: true,
     },
     email: {
       type: String,
       required: true,
       unique: true,
+      lowercase: true,
+      trim: true,
+      match: [/^\S+@\S+\.\S+$/, "Please enter a valid email address"],
     },
     password: {
       type: String,
@@ -21,12 +25,17 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    gamesFollowed: [
+    followedGames: [
       {
-        gameId: String,
-        followDate: { type: Date, default: Date.now },
-        default: [],
-        // change this to reference a Game schema if I store games in the database
+        game: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Game",
+          required: true,
+        },
+        followDate: {
+          type: Date,
+          default: Date.now,
+        },
       },
     ],
   },
