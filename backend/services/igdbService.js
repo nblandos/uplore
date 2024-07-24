@@ -84,6 +84,25 @@ class IGDBService {
       throw error;
     }
   }
+
+  async getGameById(gameId, { fields = "name" } = {}) {
+    const query = `
+      fields ${fields};
+      where id = ${gameId};
+    `;
+
+    try {
+      const response = await this.makeRequest("games", query);
+      return response[0]; //  response is an array with one element as id is unique
+    } catch (error) {
+      console.error(
+        "Error in getGameById: ",
+        error.message,
+        error.response?.data,
+      );
+      throw error;
+    }
+  }
 }
 
 export default new IGDBService();

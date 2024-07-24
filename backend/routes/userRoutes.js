@@ -6,7 +6,8 @@ const router = express.Router();
 
 router.get("/profile/:username", authenticateUser, getUserProfile);
 // router.get("/suggested", authenticateUser, getSuggestedGames);
-// router.post("/follow/:gameId", authenticateUser, followUnfollowGame); // Uncomment once game model done
+// router.get("/user/followed", authenticateUser, getUserFollowedGames); // may move to authRoutes?
+// router.post("/follow/:gameId", authenticateUser, followUnfollowGame);
 router.post("/update", authenticateUser, updateUser);
 
 export default router;
