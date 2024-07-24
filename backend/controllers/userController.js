@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from "cloudinary";
+
 import User from "../models/userModel.js";
+import { getOrCreateGame } from "../services/gameService.js";
 
 export const getUserProfile = async (req, res) => {
   try {
@@ -17,55 +19,58 @@ export const getUserProfile = async (req, res) => {
   }
 };
 
-// export const getSuggestedGames = async (req, res) => {
-//   try {
-//     const userId = req.user._id;
-//     const followedGames = await User.findById(userId).select("followedGames");
+export const followUnfollowGame = async (req, res) => {
+  try {
+    const { gameId } = req.params;
 
-//     // method to suggest similar games based on games followed here
+    const game = await getOrCreateGame(gameId);
 
-//   } catch (error) {
-//     console.log("Error in getSuggestedGames controller: ", error.message);
-//     return res.status(500).json({
-//       error: "Internal server error",
-//     });
+    if (!game) {
+      return res.status(404).json({ error: "Game not found" });
+    }
 
-//   }
+    const user = await User.findById(req.user._id);
 
-// export const followUnfollowGame = async (req, res) => {
-//   try {
-//     const { gameId } = req.params;
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
-//     const game = await Game.findById(gameId); // Find game by ID (game model not yet implemented)
-//     const user = await User.findById(req.user._id);
+    const gameObjectId = game._id;
+    const isFollowing = user.followedGames.some((fg) =>
+      fg.game.equals(gameObjectId),
+    );
 
-//     if (!game) {
-//       return res.status(404).json({ error: "Game not found" });
-//     }
-//     if (!user) {
-//       return res.status(404).json({ error: "User not found" });
-//     }
+    if (isFollowing) {
+      user.followedGames = user.followedGames.filter(
+        (fg) => !fg.game.equals(gameObjectId),
+      );
+    } else {
+      user.followedGames.push({ game: gameObjectId });
+    }
 
-//     const isFollowing = user.followedGames.includes(gameId);
+    game.followerCount = isFollowing
+      ? Math.max(0, game.followerCount - 1)
+      : game.followerCount + 1;
 
-//     if (isFollowing) {
-//       user.followedGames = user.followedGames.filter(
-//         (game) => game.toString() !== gameId,
-//       );
-//     } else {
-//       // await Game.findByIdAndUpdate(gameId, { $inc: { followers: 1 } }); // Increment followers count of game
-//       user.followedGames.push(gameId);
-//     }
+    await Promise.all([user.save(), game.save()]);
 
-//     await user.save();
-//     return res.status(200).json(user.followedGames);
-//   } catch (error) {
-//     console.log("Error in followUnfollowGame controller: ", error.message);
-//     return res.status(500).json({
-//       error: "Internal server error",
-//     });
-//   }
-// };
+    return res.status(200).json({
+      userId: user._id,
+      username: user.username,
+      followedGames: user.followedGames,
+      isFollowing: !isFollowing,
+      gameId: game._id,
+      gameName: game.name,
+      igdbId: game.gameId,
+      gameFollowers: game.followerCount,
+    });
+  } catch (error) {
+    console.log("Error in followUnfollowGame controller: ", error.message);
+    return res.status(500).json({
+      error: "Internal server error",
+    });
+  }
+};
 
 export const updateUser = async (req, res) => {
   try {

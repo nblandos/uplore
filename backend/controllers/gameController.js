@@ -1,5 +1,5 @@
-import Game from "../models/gameModel.js";
 import igdbService from "../services/igdbService.js";
+import { getOrCreateGame } from "../services/gameService.js";
 
 export const searchGames = async (req, res) => {
   try {
@@ -18,16 +18,8 @@ export const getGameDetails = async (req, res) => {
   try {
     const { gameId } = req.params;
 
-    let game = await Game.findOne({ gameId });
+    let game = await getOrCreateGame(gameId);
 
-    if (!game) {
-      const igdbGame = await igdbService.getGameById(gameId);
-
-      game = new Game({
-        gameId: igdbGame.id,
-        name: igdbGame.name,
-      });
-    }
     game.views += 1;
     await game.save();
 
