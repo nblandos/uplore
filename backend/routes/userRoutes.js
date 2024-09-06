@@ -14,3 +14,5 @@ router.post("/follow/:gameId", authenticateUser, followUnfollowGame);
 router.post("/update", authenticateUser, updateUser);
 
 export default router;
+
+// periodically update db? - no, just fetch from api and store local data in db such as followers.
