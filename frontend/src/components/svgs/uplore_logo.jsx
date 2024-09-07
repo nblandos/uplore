@@ -1,4 +1,4 @@
-const UploreBlackSvg = (props) => (
+const UploreLogoSvg = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="100%"
@@ -19,4 +19,4 @@ const UploreBlackSvg = (props) => (
   </svg>
 );
 
-export default UploreBlackSvg;
+export default UploreLogoSvg;
