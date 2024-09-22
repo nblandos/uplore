@@ -1,13 +1,12 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
-// TODO - add forgot password link
+// TODO: add forgot password link
 
-import UploreLogoSvg from "../../../components/svgs/uplore_logo";
-import UploreHeaderSvg from "../../../components/svgs/uplore_header";
+import UploreLogoSvg from "../../../components/svgs/UploreLogo";
+import UploreHeaderSvg from "../../../components/svgs/UploreHeader";
 
-import { MdOutlineMail } from "react-icons/md";
-import { MdPassword } from "react-icons/md";
+import { MdOutlineMail, MdPassword } from "react-icons/md";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -69,7 +68,11 @@ const LoginPage = () => {
           <button className="btn rounded-full btn-primary text-white text-lg">
             Login
           </button>
-          {isError && <p className="text-red-500">Something went wrong</p>}
+          {isError && (
+            <div className="flex justify-center">
+              <p className="text-red-500">Something went wrong</p>
+            </div>
+          )}
         </form>
         <div className="flex flex-col gap-4 mt-8 w-full max-w-md">
           <p className="text-black dark:text-white text-lg text-center">

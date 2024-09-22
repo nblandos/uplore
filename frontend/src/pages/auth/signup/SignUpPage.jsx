@@ -1,21 +1,18 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-
-// TODO - add terms of service and privacy policy links
-// TODO - add email verification
-
-import UploreLogoSvg from "../../../components/svgs/uplore_logo";
-import UploreHeaderSvg from "../../../components/svgs/uplore_header";
-
-import { MdOutlineMail } from "react-icons/md";
+import { MdOutlineMail, MdPassword } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
-import { MdPassword } from "react-icons/md";
+
+import UploreLogoSvg from "../../../components/svgs/UploreLogo";
+import UploreHeaderSvg from "../../../components/svgs/UploreHeader";
+
+// TODO: add terms of service and privacy policy links
+// TODO: add email verification
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
     email: "",
     username: "",
-    fullName: "",
     password: "",
   });
 
@@ -84,7 +81,11 @@ const SignUpPage = () => {
           <button className="btn rounded-full btn-primary text-white text-lg">
             Sign up
           </button>
-          {isError && <p className="text-red-500">Something went wrong</p>}
+          {isError && (
+            <div className="flex justify-center">
+              <p className="text-red-500">Something went wrong</p>
+            </div>
+          )}
         </form>
         <div className="flex flex-col gap-4 mt-8 w-full max-w-md">
           <p className="text-black dark:text-white text-lg text-center">
@@ -92,7 +93,7 @@ const SignUpPage = () => {
           </p>
           <Link to="/login">
             <button className="btn rounded-full btn-primary text-white btn-outline w-full text-lg">
-              Login
+              Sign in
             </button>
           </Link>
         </div>
