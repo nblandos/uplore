@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import SearchBar from "./SearchBar";
 import UploreLogoSvg from "../../components/svgs/UploreLogo";
 import UploreHeaderSvg from "../../components/svgs/UploreHeader";
 
@@ -10,10 +11,7 @@ const Navbar = () => {
           <UploreLogoSvg className="w-12 h-12 fill-black dark:fill-white" />
           <UploreHeaderSvg className="h-12 w-36 hidden md:block fill-black dark:fill-white" />
         </Link>
-
-        <div className="flex-grow">{/* Search Bar Placeholder */}</div>
-
-        <div>{/* Right side content*/}</div>
+        <SearchBar />
       </div>
     </nav>
   );

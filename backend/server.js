@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { v2 as cloudinary } from "cloudinary";
@@ -19,6 +20,18 @@ cloudinary.config({
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+const corsConfig = {
+  origin: (origin, callback) => {
+    if (origin && /^http:\/\/localhost:\d+$/.test(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
+
+app.use(cors(corsConfig));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
