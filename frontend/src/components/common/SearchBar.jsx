@@ -14,13 +14,15 @@ const GameSearchBar = () => {
     e.preventDefault();
     if (searchQuery.trim() !== "") {
       navigate(`/search?query=${searchQuery}`);
+      setSearchQuery("");
+      window.scrollTo(0, 0);
       e.target.reset();
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="flex-grow max-w-lg ml-4 sm:px-8">
-      <div className="flex items-center c-bg-dark-blue px-3 rounded-full justify-between">
+      <div className="flex items-center px-3 rounded-full justify-between bg-gray-200 dark:bg-gray-800">
         <input
           className="w-full p-2 font-medium bg-transparent"
           placeholder="Search"

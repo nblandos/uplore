@@ -64,11 +64,13 @@ class IGDBService {
 
   async searchGames(
     searchQuery,
-    { fields = "name, summary, websites", limit = 200 } = {},
+    { fields = "name, cover.image_id", limit = 200 } = {},
   ) {
+    // category = 0 is for main games (exclude DLCs, etc.)
     const query = `
       search "${searchQuery}";
       fields ${fields};
+      where category = 0 & cover != null;
       limit ${limit};
     `;
 
