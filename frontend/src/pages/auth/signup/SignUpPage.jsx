@@ -28,7 +28,7 @@ const SignUpPage = () => {
   const isError = false;
 
   return (
-    <div className="max-w-screen-xl mx-auto flex flex-col items-center h-screen px-10">
+    <div className="flex flex-col items-center h-screen px-10">
       <div className="flex items-center justify-center mt-20">
         <Link to="/">
           <UploreLogoSvg className="w-24 fill-black dark:fill-white" />

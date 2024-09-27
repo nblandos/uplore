@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
-import Navbar from "../../components/common/Navbar";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 import CoverImage from "../../components/common/CoverImage";
+import Navbar from "../../components/common/Navbar";
 
 const SearchResults = () => {
   const [gameResults, setGameResults] = useState([]);
@@ -32,7 +32,7 @@ const SearchResults = () => {
   return (
     <div>
       <Navbar />
-      <div className="mt-16 px-12 py-6 ">
+      <div className="px-12 py-6 flex justify-center mt-16">
         {isLoading ? (
           <LoadingSpinner />
         ) : gameResults.length === 0 ? (
